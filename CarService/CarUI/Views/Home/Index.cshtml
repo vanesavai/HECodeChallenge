@@ -1,0 +1,69 @@
+﻿@using CarUI.Controllers.Classes;
+@model CarUI.Models.IndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<div>
+    <h4>IndexViewModel</h4>
+    <hr />
+    <dl class="row">
+    </dl>
+</div>
+<div>
+
+
+    @{
+        foreach (Car c in Model.CarList)
+        {
+            <span>Guess price for @c.Make @c.Model</span>
+            <input type="text" class="guess-input" data-correct-price="@c.Price" />
+            <button type="button" class="guess-button">Guess</button>          
+            <br />
+        }
+
+ }
+
+
+</div>
+
+<script>
+    // Get all the guess inputs on the page
+    const inputsToBeGuessed = document.querySelectorAll(".guess-input");
+
+    // Loop through each guess input and add an event listener to its corresponding guess button
+    inputsToBeGuessed.forEach(function (guessInput) {
+
+        const guessButton = guessInput.nextElementSibling;
+
+        // Get the correct price for the current guess input
+        const correctPrice = guessInput.getAttribute("data-correct-price");
+
+
+        const message = document.createElement("span");
+        guessButton.insertAdjacentElement("afterend", message);
+
+        // Add an event listener to the guess button that triggers when it is clicked
+        guessButton.addEventListener("click", function () {
+            // Check if the value in the guess input is within the tolerance range of the correct price
+            const guessValue = parseInt(guessInput.value);
+            const lowerBound = parseInt(correctPrice) - 5000;
+            const upperBound = parseInt(correctPrice) + 5000;
+
+            if (guessValue >= lowerBound && guessValue <= upperBound) {
+                // If it's within the tolerance range, display a green message next to the button
+                message.textContent = "You guessed the correct price!";
+                message.style.color = "lightgreen";
+            } else {
+                // If it's outside the tolerance range, display a red message next to the button
+                message.textContent = "Sorry, your guess is incorrect.";
+                message.style.color = "red";
+            }
+        });
+    });
+
+
+</script>
